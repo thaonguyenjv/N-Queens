@@ -49,7 +49,7 @@ class NQueensCSP:
         end_time = time.time()
         
         if solution:
-            print(f" Tìm được nghiệm trong {end_time - start_time:.4f}s")
+            print(f"✓ Tìm được nghiệm trong {end_time - start_time:.4f}s")
             return solution
         else:
             print(" Không tìm được nghiệm")
@@ -89,65 +89,17 @@ class NQueensCSP:
                     # Kiểm tra xung đột
                     if r1 == r2 or c1 == c2 or abs(r1-r2) == abs(c1-c2):
                         return " Có xung đột"
-        return " Hợp lệ"
+        return "Hợp lệ"
 
 # Chạy thử nghiệm
 def main():
-    try:
-        # Giải N-Queens 5x5
-        solver = NQueensCSP(5)
-        solution = solver.solve()
-        solver.print_board(solution)
-        
-        print("\n" + "="*40)
-       
-    except ImportError:
-        print(" Lỗi: Chưa cài đặt thư viện simpleai")
-        print("Cài đặt: pip install simpleai")
-        print("\n Chuyển sang thuật toán tự implement:")
-        
-        # Fallback implementation
-        fallback_solve()
-
-def fallback_solve():
-    """Giải pháp dự phòng khi không có SimpleAI"""
     
-    def is_safe(board, row, col):
-        for i in range(row):
-            if (board[i] == col or 
-                abs(board[i] - col) == abs(i - row)):
-                return False
-        return True
+    # Giải N-Queens 5x5
+    solver = NQueensCSP(5)
+    solution = solver.solve()
+    solver.print_board(solution)
     
-    def solve_nqueens(board, row):
-        if row == 5:
-            return True
-        
-        for col in range(5):
-            if is_safe(board, row, col):
-                board[row] = col
-                if solve_nqueens(board, row + 1):
-                    return True
-                board[row] = -1
-        return False
-    
-    print("=== N-Queens 5x5 (Fallback) ===")
-    board = [-1] * 5
-    
-    if solve_nqueens(board, 0):
-        print("✓ Tìm được nghiệm")
-        print(f"Nghiệm: {[(i, board[i]) for i in range(5)]}")
-        print("\n Bàn cờ 5x5:")
-        print("   " + " ".join([f"{i:2}" for i in range(5)]))
-        print("  +" + "---" * 5)
-        for i in range(5):
-            line = f"{i} |"
-            for j in range(5):
-                line += " ♛ " if board[i] == j else " . "
-            print(line)
-        print(f"\n Vị trí các quân hậu: {[(i, board[i]) for i in range(5)]}")
-    else:
-        print(" Không tìm được nghiệm")
+    print("\n" + "="*40)
 
 if __name__ == "__main__":
     main()
