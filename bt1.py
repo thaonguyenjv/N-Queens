@@ -1,0 +1,153 @@
+from simpleai.search import CspProblem, backtrack
+import time
+
+class NQueensCSP:
+    """N-Queens problem using SimpleAI library"""
+    
+    def __init__(self, n=5):
+        self.n = n
+        self.setup_csp()
+    
+    def setup_csp(self):
+        """Thiết lập bài toán CSP"""
+        # Variables: các hàng (0, 1, 2, 3, 4)
+        variables = list(range(self.n))
+        
+        # Domains: mỗi hàng có thể đặt quân hậu ở cột nào (0-4)
+        domains = {}
+        for var in variables:
+            domains[var] = list(range(self.n))
+        
+        # Constraints: không cùng cột, không cùng đường chéo
+        constraints = []
+        
+        for i in range(self.n):
+            for j in range(i + 1, self.n):
+                # Constraint giữa hàng i và hàng j
+                def constraint_func(variables, values, row1=i, row2=j):
+                    col1, col2 = values
+                    # Không cùng cột
+                    if col1 == col2:
+                        return False
+                    # Không cùng đường chéo
+                    if abs(row1 - row2) == abs(col1 - col2):
+                        return False
+                    return True
+                
+                constraints.append(((i, j), constraint_func))
+        
+        # Tạo CSP problem
+        self.problem = CspProblem(variables, domains, constraints)
+    
+    def solve(self):
+        
+        start_time = time.time()
+        
+        # Sử dụng backtrack search của SimpleAI
+        solution = backtrack(self.problem)
+        
+        end_time = time.time()
+        
+        if solution:
+            print(f" Tìm được nghiệm trong {end_time - start_time:.4f}s")
+            return solution
+        else:
+            print(" Không tìm được nghiệm")
+            return None
+    
+    def print_board(self, solution):
+        """In bàn cờ"""
+        if not solution:
+            return
+        
+        print(f"\n Bàn cờ {self.n}x{self.n}:")
+        print("   " + " ".join([f"{i:2}" for i in range(self.n)]))
+        print("  +" + "---" * self.n)
+        
+        for row in range(self.n):
+            line = f"{row} |"
+            for col in range(self.n):
+                if solution[row] == col:
+                    line += " ♛ "
+                else:
+                    line += " . "
+            print(line)
+        
+        print(f"\n Vị trí các quân hậu: {[(row, solution[row]) for row in sorted(solution.keys())]}")
+        print(f" Kiểm tra: {self.verify_solution(solution)}")
+    
+    def verify_solution(self, solution):
+        """Xác minh nghiệm"""
+        if not solution:
+            return False
+        
+        positions = [(row, solution[row]) for row in solution.keys()]
+        
+        for i, (r1, c1) in enumerate(positions):
+            for j, (r2, c2) in enumerate(positions):
+                if i != j:
+                    # Kiểm tra xung đột
+                    if r1 == r2 or c1 == c2 or abs(r1-r2) == abs(c1-c2):
+                        return " Có xung đột"
+        return " Hợp lệ"
+
+# Chạy thử nghiệm
+def main():
+    try:
+        # Giải N-Queens 5x5
+        solver = NQueensCSP(5)
+        solution = solver.solve()
+        solver.print_board(solution)
+        
+        print("\n" + "="*40)
+       
+    except ImportError:
+        print(" Lỗi: Chưa cài đặt thư viện simpleai")
+        print("Cài đặt: pip install simpleai")
+        print("\n Chuyển sang thuật toán tự implement:")
+        
+        # Fallback implementation
+        fallback_solve()
+
+def fallback_solve():
+    """Giải pháp dự phòng khi không có SimpleAI"""
+    
+    def is_safe(board, row, col):
+        for i in range(row):
+            if (board[i] == col or 
+                abs(board[i] - col) == abs(i - row)):
+                return False
+        return True
+    
+    def solve_nqueens(board, row):
+        if row == 5:
+            return True
+        
+        for col in range(5):
+            if is_safe(board, row, col):
+                board[row] = col
+                if solve_nqueens(board, row + 1):
+                    return True
+                board[row] = -1
+        return False
+    
+    print("=== N-Queens 5x5 (Fallback) ===")
+    board = [-1] * 5
+    
+    if solve_nqueens(board, 0):
+        print("✓ Tìm được nghiệm")
+        print(f"Nghiệm: {[(i, board[i]) for i in range(5)]}")
+        print("\n Bàn cờ 5x5:")
+        print("   " + " ".join([f"{i:2}" for i in range(5)]))
+        print("  +" + "---" * 5)
+        for i in range(5):
+            line = f"{i} |"
+            for j in range(5):
+                line += " ♛ " if board[i] == j else " . "
+            print(line)
+        print(f"\n Vị trí các quân hậu: {[(i, board[i]) for i in range(5)]}")
+    else:
+        print(" Không tìm được nghiệm")
+
+if __name__ == "__main__":
+    main()
