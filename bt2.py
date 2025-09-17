@@ -54,7 +54,6 @@ def create_n_queens_problem(n=5):
     # Trả về một đối tượng CspProblem đã được định nghĩa đầy đủ.
     return CspProblem(variables, domains, constraints)
 
-
 # ================== Phần 2: Hàm giải bài toán và đo lường hiệu suất ==================
 def solve_and_measure(problem, variable_heuristic=None, value_heuristic=None, inference=False):
     '''
@@ -97,7 +96,7 @@ def print_solution_array(solution, n):
       - Hàng 3, cột 2
     '''
     if not solution:
-        print("❌ Không có nghiệm.")
+        print("Không có nghiệm.")
         return
 
     # Chuyển đổi từ định dạng dictionary của simpleai sang mảng.
@@ -105,16 +104,12 @@ def print_solution_array(solution, n):
     for var, col in solution.items():
         row = int(var[1:])
         result[row] = col
-    print(f"📌 Nghiệm tìm được (dạng mảng): {result}")
+    print(f"Nghiệm tìm được: {result}")
     return result
 
 def print_board(solution, n):
-    '''
-    Hiển thị bàn cờ một cách trực quan từ nghiệm đã tìm được.
-    'Q' đại diện cho quân hậu, '.' đại diện cho ô trống.
-    '''
     if not solution:
-        print("❌ Không tìm thấy nghiệm để hiển thị bàn cờ.")
+        print("Không tìm thấy nghiệm để hiển thị bàn cờ.")
         return
 
     # Tạo một bàn cờ rỗng.
@@ -129,11 +124,9 @@ def print_board(solution, n):
     for row_data in board:
         print(' '.join(row_data))
 
-
 # ================== Phần 4: Khối thực thi chính ==================
 if __name__ == "__main__":
-    # --- Cấu hình ---
-    N = 5  # Kích thước bàn cờ (bạn có thể thay đổi giá trị này, ví dụ: 8, 10, ...).
+    N = 5 
     print(f"=== Giải bài toán N-Queens với N={N} ===\n")
 
     # --- Định nghĩa các chiến lược cần thử nghiệm ---
@@ -164,7 +157,7 @@ if __name__ == "__main__":
     # --- Chạy và so sánh các chiến lược ---
     # Vòng lặp qua từng chiến lược đã định nghĩa.
     for name, var_params, other_params in strategies:
-        print(f"\n▶ Đang chạy chiến lược: {name}")
+        print(f"\nĐang chạy chiến lược: {name}")
         
         # Tạo lại bài toán cho mỗi lần chạy để đảm bảo tính công bằng.
         problem = create_n_queens_problem(N)
@@ -173,7 +166,7 @@ if __name__ == "__main__":
         # Dấu ** dùng để "giải nén" dictionary thành các tham số keyword.
         result = solve_and_measure(problem, **var_params, **other_params)
         
-        print(f"⏱️  Thời gian: {result['time']:.6f}s")
+        print(f"Thời gian: {result['time']:.6f}s")
         
         # Hiển thị nghiệm tìm được.
         print_solution_array(result['solution'], N)
@@ -182,7 +175,6 @@ if __name__ == "__main__":
         # Lưu lại kết quả để so sánh cuối cùng.
         results.append((name, result['time']))
 
-    # ================== Phần 5: In bảng so sánh tổng kết ==================
     print("\n\n=== Bảng so sánh hiệu quả các chiến lược ===")
     print(f"{'Chiến lược':<35} | {'Thời gian (giây)':<10}")
     print("-" * 55)

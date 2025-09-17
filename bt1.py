@@ -2,8 +2,6 @@ from simpleai.search import CspProblem, backtrack
 import time
 
 class NQueensCSP:
-    """N-Queens problem using SimpleAI library"""
-    
     def __init__(self, n=5):
         self.n = n
         self.setup_csp()
@@ -49,7 +47,7 @@ class NQueensCSP:
         end_time = time.time()
         
         if solution:
-            print(f"✓ Tìm được nghiệm trong {end_time - start_time:.4f}s")
+            print(f"Tìm được nghiệm trong {end_time - start_time:.4f}s")
             return solution
         else:
             print(" Không tìm được nghiệm")
@@ -68,7 +66,7 @@ class NQueensCSP:
             line = f"{row} |"
             for col in range(self.n):
                 if solution[row] == col:
-                    line += " ♛ "
+                    line += " Q "
                 else:
                     line += " . "
             print(line)
@@ -93,13 +91,9 @@ class NQueensCSP:
 
 # Chạy thử nghiệm
 def main():
-    
     # Giải N-Queens 5x5
     solver = NQueensCSP(5)
     solution = solver.solve()
     solver.print_board(solution)
-    
-    print("\n" + "="*40)
-
 if __name__ == "__main__":
     main()

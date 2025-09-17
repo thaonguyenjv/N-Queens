@@ -1,23 +1,10 @@
-"""
-Bai 3: N-Queens 5x5 voi Backtracking + AC3 (Arc Consistency)
-Su dung thu vien simpleai de so sanh hieu suat voi va khong co AC3
-"""
-
 from simpleai.search import CspProblem, backtrack
 import time
-import sys
-
-# Fix encoding issue on Windows
-if sys.platform == 'win32':
-    import codecs
-    sys.stdout = codecs.getwriter('utf-8')(sys.stdout.buffer, 'strict')
-
 class NQueensProblem(CspProblem):
     """
     Bai toan N-Queens su dung CSP
     Moi bien dai dien cho mot hang, gia tri la cot cua quan hau
     """
-    
     def __init__(self, n=5):
         self.n = n
         # Bien: Q0, Q1, Q2, Q3, Q4 (dai dien cho hang 0,1,2,3,4)
@@ -41,7 +28,6 @@ class NQueensProblem(CspProblem):
         
         super().__init__(variables, domains, constraints)
         self.search_steps = 0
-    
     def not_attacking_constraint(self, variables, values):
         """
         Kiem tra hai quan hau khong tan cong nhau
@@ -66,7 +52,6 @@ class NQueensProblem(CspProblem):
             return False
             
         return True
-    
     def print_solution(self, solution):
         """In ra ban co voi nghiem tim duoc"""
         if not solution:
@@ -94,18 +79,13 @@ class NQueensProblem(CspProblem):
         print()
 
 def solve_with_ac3_comparison():
-    """
-    So sanh hieu suat giua co AC3 va khong co AC3
-    """
     print("=" * 60)
     print("BAI TOAN N-QUEENS 5x5 - SO SANH AC3")
-    print("=" * 60)
     
     results = {}
     
     # Test with AC3 = True
-    print("\n1. CHAY VOI AC3 = TRUE (co kiem tra tinh nhat quan cung)")
-    print("-" * 50)
+    print("\n1. Backtrack với AC3 ")
     
     problem_ac3 = NQueensProblem(5)
     start_time = time.time()
@@ -121,20 +101,19 @@ def solve_with_ac3_comparison():
             'success': solution_ac3 is not None
         }
         
-        print(f"✓ Thoi gian thuc hien: {results['ac3_true']['time']:.6f} giay")
-        print(f"✓ So buoc kiem tra rang buoc: {results['ac3_true']['steps']}")
-        print(f"✓ Tim thay nghiem: {'Co' if solution_ac3 else 'Khong'}")
+        print(f"Thoi gian thuc hien: {results['ac3_true']['time']:.6f} giay")
+        print(f"So buoc kiem tra rang buoc: {results['ac3_true']['steps']}")
+        print(f"Tim thay nghiem: {'Co' if solution_ac3 else 'Khong'}")
         
         if solution_ac3:
             problem_ac3.print_solution(solution_ac3)
             
     except Exception as e:
-        print(f"✗ Loi khi chay voi AC3=True: {e}")
+        print(f"Loi khi chay voi AC3: {e}")
         results['ac3_true'] = {'success': False, 'error': str(e)}
     
     # Test with AC3 = False  
-    print("\n2. CHAY VOI AC3 = FALSE (khong kiem tra tinh nhat quan cung)")
-    print("-" * 50)
+    print("\n2. Backtrack với không có AC3")
     
     problem_no_ac3 = NQueensProblem(5)
     start_time = time.time()
@@ -150,20 +129,19 @@ def solve_with_ac3_comparison():
             'success': solution_no_ac3 is not None
         }
         
-        print(f"✓ Thoi gian thuc hien: {results['ac3_false']['time']:.6f} giay")
-        print(f"✓ So buoc kiem tra rang buoc: {results['ac3_false']['steps']}")
-        print(f"✓ Tim thay nghiem: {'Co' if solution_no_ac3 else 'Khong'}")
+        print(f"Thoi gian thuc hien: {results['ac3_false']['time']:.6f} giay")
+        print(f"So buoc kiem tra rang buoc: {results['ac3_false']['steps']}")
+        print(f"Tim thay nghiem: {'Co' if solution_no_ac3 else 'Khong'}")
         
         if solution_no_ac3:
             problem_no_ac3.print_solution(solution_no_ac3)
             
     except Exception as e:
-        print(f"✗ Loi khi chay voi AC3=False: {e}")
+        print(f"Loi khi chay voi khong co AC3: {e}")
         results['ac3_false'] = {'success': False, 'error': str(e)}
     
     # So sanh ket qua
     print("\n3. SO SANH KET QUA")
-    print("-" * 50)
     
     if results.get('ac3_true', {}).get('success') and results.get('ac3_false', {}).get('success'):
         ac3_time = results['ac3_true']['time']
@@ -181,18 +159,7 @@ def solve_with_ac3_comparison():
         print(f"  • AC3 = True:  {ac3_steps:,} buoc")
         print(f"  • AC3 = False: {no_ac3_steps:,} buoc")
         if no_ac3_steps > 0:
-            print(f"  • Ti le: {ac3_steps/no_ac3_steps:.2f}x")
-        
-        print(f"\nKet luan:")
-        if ac3_time < no_ac3_time:
-            print("  ✓ AC3 giup tang toc do tim kiem")
-        else:
-            print("  • AC3 khong tang toc trong truong hop nay (co the do overhead)")
-            
-        if ac3_steps < no_ac3_steps:
-            print("  ✓ AC3 giup giam so buoc kiem tra rang buoc")
-        else:
-            print("  • AC3 khong giam so buoc kiem tra trong truong hop nay")
+            print(f"Ti le: {ac3_steps/no_ac3_steps:.2f}x")
     
     return results
 
@@ -218,14 +185,5 @@ def demonstrate_solutions():
 if __name__ == "__main__":
     # Chay so sanh chinh
     results = solve_with_ac3_comparison()
-    
     # Hien thi them mot so nghiem
     demonstrate_solutions()
-    
-    print("\n" + "=" * 60)
-    print("HOAN THANH THUC NGHIEM")
-    print("=" * 60)
-    print("Chu y:")
-    print("• AC3 giup loai bo cac gia tri khong nhat quan truoc khi backtrack")
-    print("• Voi bai toan nho nhu 5x5, hieu qua cua AC3 co the khong ro rang")
-    print("• AC3 thuong hieu qua hon voi cac bai toan CSP phuc tap hon")

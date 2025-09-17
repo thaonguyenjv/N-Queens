@@ -26,7 +26,6 @@ class NQueensBase:
         print()
 
 class NQueensCSP(NQueensBase):
-    """Bài toán N-Queens sử dụng CSP với SimpleAI"""
     def __init__(self, n: int = 5):
         super().__init__(n)
         self.variables = [f'Q{i}' for i in range(n)]
