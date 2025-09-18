@@ -141,16 +141,16 @@ class HillClimbingWithValueOrdering(NQueensOptimization):
     
     def generate_initial_state_with_value_ordering(self) -> List[int]:
         """Tạo trạng thái ban đầu sử dụng value ordering"""
-        state = [0] * self.n
+        state = [0] * self.n #tạm thời đặt tất cả hậu ở hàng 0
         
         for col in range(self.n):
             # Tính điểm cho mỗi vị trí có thể
             position_scores = []
             for row in range(self.n):
-                temp_state = state.copy()
-                temp_state[col] = row
-                score = self.value_function(temp_state)
-                position_scores.append((row, score))
+                temp_state = state.copy() #tạo trạng thái tạm thời
+                temp_state[col] = row #thử đặt hậu ở hàng row
+                score = self.value_function(temp_state) #tính điểm cho vị trí này
+                position_scores.append((row, score)) #lưu lại vị trí và điểm
             
             # Sắp xếp theo điểm và chọn trong top 3
             position_scores.sort(key=lambda x: x[1], reverse=True)
@@ -212,7 +212,7 @@ class SimulatedAnnealingWithValueOrdering(NQueensOptimization):
         return current, self.conflicts(current), iteration
     
     def generate_initial_state_with_value_ordering(self) -> List[int]:
-        """Tương tự Hill Climbing"""
+        """Tái sử dụng hàm tạo trạng thái ban đầu từ Hill Climbing"""
         return HillClimbingWithValueOrdering(self.n).generate_initial_state_with_value_ordering()
     
     def get_neighbor_with_value_ordering(self, state: List[int], temperature: float) -> List[int]:
@@ -255,8 +255,8 @@ class GeneticAlgorithmWithValueOrdering(NQueensOptimization):
         self.population_size = population_size
     
     def solve(self, generations: int = 500) -> Tuple[List[int], int, int]:
-        # Tạo population ban đầu sử dụng value ordering
-        population = self.create_initial_population_with_ordering()
+        # Tạo population ban đầu sử dụng value ordering 
+        population = self.create_initial_population_with_ordering() #tái sử dụng hàm tạo trạng thái ban đầu từ Hill Climbing
         
         max_fitness = self.n * (self.n - 1) // 2
         
