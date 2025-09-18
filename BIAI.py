@@ -16,18 +16,6 @@ def queens_constraint(variables, values):
     # Không cùng hàng và không cùng đường chéo
     return abs(val1 - val2) not in (0, abs(var1 - var2))
 
-# --------- Hàm in bàn cờ ----------
-def print_board(solution, N, index=1):
-    print(f"\nNghiệm {index}:")
-    for row in range(N):
-        line = ""
-        for col in range(N):
-            if solution[col] == row:
-                line += " Q "
-            else:
-                line += " . "
-        print(line)
-    print()
 
 # --------- Hàm chạy thử nghiệm ----------
 def run_test(N, use_ac3=False):
@@ -59,9 +47,6 @@ def run_test(N, use_ac3=False):
     print("Thời gian chạy:", round(end - start, 5), "giây")
     print("Số bước kiểm tra ràng buộc:", steps)
 
-    # In bàn cờ nghiệm
-    if result:
-        print_board(result, N)
 
 # --------- Thực thi ----------
 if __name__ == '__main__':
